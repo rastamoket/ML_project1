@@ -6,14 +6,29 @@ import numpy as np
 def load_data(dataSetCSVfile):
     """Load data and convert it to the metrics system."""
     path_dataset = dataSetCSVfile
+    # To get the id of the samples
     id_samples = np.genfromtxt(
         path_dataset, delimiter=",", skip_header=1, usecols=[0])
 
-    labels = np.genfromtxt(
-        path_dataset, delimiter=",", skip_header=1, usecols=[1],
-        converters={0: lambda x: 0 if b"S" in x else 1})
+    if(dataSetCSVfile == "train.csv"):
+        # Here we will load the data if the file given is "train.csv"
+        # For the labels, we choose that s = 0, b = 1
+        labels = np.genfromtxt(
+            path_dataset, delimiter=",", skip_header=1, usecols=[1],
+            converters={1: lambda x: 0 if b"s" in x else 1})
+        # "data" will contain all the features for each samples so it will be a NxM matrix (with N = sumber of sample, M = number of features)
+        data = np.genfromtxt(
+            path_dataset, delimiter=",", skip_header=1, usecols=(np.arange(2,32)))
+        return id_samples, labels, data
+    else:
+        # Here we will load the data if the file given is not "train.csv" --> so it is for "test.csv"
+        # "data" will contain all the features for each samples so it will be a NxM matrix (with N = sumber of sample, M = number of features)
+        data = np.genfromtxt(
+            path_dataset, delimiter=",", skip_header=1, usecols=(np.arange(1,31)))
+        return id_samples, data
+    
 
-    return id_samples, labels
+    
 
 def standardize(x):
     """Standardize the original data set."""
