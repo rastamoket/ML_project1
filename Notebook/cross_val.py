@@ -48,12 +48,14 @@ def cross_validation(y, x, k_indices, k, lambda_, degree):
     # calculate the loss for train and test data: TODO
     # ***************************************************
 
-    loss_tr = compute_mse(y_train, x_train, w)
-    loss_te = compute_mse(y_test, x_test, w)
+    #loss_tr = compute_mse(y_train, x_train, w)
+    #loss_te = compute_mse(y_test, x_test, w)
     
-    pre_prediction = x_test.dot(w)
-    ind_back = np.where(pre_prediction<0)[0]
-    ind_sign = np.where(pre_prediction>=0)[0]
+    z = x_train.dot(w)
+    sigma = np.exp(z)/(1+np.exp(z))
+
+    ind_back = np.where(sigma<0.5)[0]
+    ind_sign = np.where(sigma>0.5)[0]
     
     prediction = np.ones(y_train.shape[0])
     prediction[ind_back] = -1
