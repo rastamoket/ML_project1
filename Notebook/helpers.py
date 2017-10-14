@@ -12,10 +12,10 @@ def load_data(dataSetCSVfile):
 
     if(dataSetCSVfile == "train.csv"):
         # Here we will load the data if the file given is "train.csv"
-        # For the labels, we choose that s = 0, b = 1
+        # For the labels, we choose that s = 1, b = -1
         labels = np.genfromtxt(
             path_dataset, delimiter=",", skip_header=1, usecols=[1],
-            converters={1: lambda x: 0 if b"b" in x else 1})
+            converters={1: lambda x: -1 if b"b" in x else 1})
         # "data" will contain all the features for each samples so it will be a NxM matrix (with N = sumber of sample, M = number of features)
         data = np.genfromtxt(
             path_dataset, delimiter=",", skip_header=1, usecols=(np.arange(2,32)))
