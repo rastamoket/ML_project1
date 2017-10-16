@@ -12,10 +12,10 @@ def load_data(dataSetCSVfile):
 
     if(dataSetCSVfile == "train.csv"):
         # Here we will load the data if the file given is "train.csv"
-        # For the labels, we choose that s = 0, b = 1
+        # For the labels, we choose that s = 1, b = -1
         labels = np.genfromtxt(
             path_dataset, delimiter=",", skip_header=1, usecols=[1],
-            converters={1: lambda x: 0 if b"b" in x else 1})
+            converters={1: lambda x: -1 if b"b" in x else 1})
         # "data" will contain all the features for each samples so it will be a NxM matrix (with N = sumber of sample, M = number of features)
         data = np.genfromtxt(
             path_dataset, delimiter=",", skip_header=1, usecols=(np.arange(2,32)))
@@ -39,10 +39,10 @@ def standardize(x):
     return x, mean_x, std_x
 
 
-def build_model_data(height, weight):
+def build_model_data(data, label):
     """Form (y,tX) to get regression data in matrix form."""
-    y = weight
-    x = height
+    y = label
+    x = data
     num_samples = len(y)
     tx = np.c_[np.ones(num_samples), x]
     return y, tx
