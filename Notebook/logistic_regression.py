@@ -29,7 +29,7 @@ def compute_gradient(y, tx, w):
     return grad
 
 def learning_grad_descent(y, tx, initial_w, max_iters, gamma):
-    threshold = 1e-8
+    threshold = 1e-2
     ws = [initial_w]
     losses =[]
     w = initial_w
