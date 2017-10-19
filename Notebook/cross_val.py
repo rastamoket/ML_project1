@@ -60,10 +60,7 @@ def cross_validation(y, x, k_indices, k, gamma):
         
     y_pred = predict_labels(w, x_test)
     
-    train_error = np.where(y_pred == y_test)[0].shape[0]/y_test.shape[0]
-    
-    #prediction = np.ones(y_train.shape[0])
-    #prediction[ind_back] = -1
+    train_error = np.where(y_pred != y_test)[0].shape[0]/y_test.shape[0] # This will give the error!!!
     
     return train_error
 
