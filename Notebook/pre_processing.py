@@ -13,7 +13,7 @@ def data_whitening(data):
             - data_clean: data whitened
     """
     # Keep the indices (samples = row, features = column) in which there are -999.0
-    samples_bad_ind = np.unique(np.where(data == -999.0)[0]) # indices of samples that contains at least one -999.0
+    #samples_bad_ind = np.unique(np.where(data == -999.0)[0]) # indices of samples that contains at least one -999.0  NOT USEFUL
     features_bad_ind = np.unique(np.where(data == -999.0)[1]) # indices of features that contains at least one -999.0
     
     for f in range(data.shape[1]):
