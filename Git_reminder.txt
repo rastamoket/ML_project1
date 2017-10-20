@@ -1,0 +1,9 @@
+git branch
+git branch nom_de_branch
+git branch -d nom_de_branch
+git checkout nom_de_branch
+git add stuff_to_add
+git commit -m"message"
+git push
+git status
+dans master: git merge nom_de_branch
