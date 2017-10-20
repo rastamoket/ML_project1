@@ -14,20 +14,21 @@ def sigmoid(x):
     return 1.0 / (np.exp(-x) + 1)
 
 def compute_loss(y, tx, w):
-    pred = sigmoid(tx.dot(w))
-    loss = y.T.dot(np.log(pred)) + (1 - y).T.dot(np.log(1 - pred))
+    #pred = sigmoid(tx.dot(w))
+    #loss_ = y.T.dot(np.log(pred)) + (1 - y).T.dot(np.log(1 - pred))
+    #loss_ = -loss_
     # Ivan's version
-    #loss = np.sum(np.log(1+np.exp(tx.dot(w))))-y.T.dot(tx.dot(w)) 
-    return np.squeeze(- loss)
+    loss_ = np.sum(np.log(1+np.exp(tx.dot(w))))-y.T.dot(tx.dot(w))
+    return loss_
     
     #return np.log(1+np.exp(tx.dot(w))) - (y.T).dot(tx.dot(w))
 
 def compute_gradient(y, tx, w):
-    sigma = sigmoid(tx.dot(w))
-    tmp = sigma - y
-    grad = (tx.T).dot(tmp)
+    #sigma = sigmoid(tx.dot(w))
+    #tmp = sigma - y
+    #grad = (tx.T).dot(tmp)
     # Ivan's version
-    #grad=tx.T.dot(sigmoid(tx.dot(w))-y)
+    grad=tx.T.dot(sigmoid(tx.dot(w))-np.reshape(y,(len(y),1)))
     return grad
 
 def calculate_hessian(y, tx, w):
@@ -39,8 +40,8 @@ def calculate_hessian(y, tx, w):
 
 def logistic_regression(y, tx, w):
     """return the loss, gradient, and hessian."""
-    loss=calculate_loss(y, tx, w)
-    gradient=calculate_gradient(y, tx, w)
+    loss=compute_loss(y, tx, w)
+    gradient=compute_gradient(y, tx, w)
     hessian=calculate_hessian(y, tx, w)
     return loss, gradient, hessian
 
@@ -53,15 +54,15 @@ def penalized_logistic_regression(y, tx, w, lambda_):
     hessian=hessian+lambda_*np.identity(hessian.shape[0])
     return loss, gradient, hessian
 
-def learning_grad_descent(y, tx, initial_w, max_iters, gamma):
+def learning_grad_descent(y, tx, initial_w, max_iter, gamma):
     threshold = 1e-8
     ws = [initial_w]
     losses =[]
     w = initial_w
     
-    for n in range(max_iters):
+    for n in range(max_iter):
         loss = compute_loss(y,tx,w)
-        w = ws[n] - gamma*compute_gradient(y, tx, w)
+        w = ws[n] - compute_gradient(y, tx, w)*gamma
         
         ws.append(w)
         losses.append(loss)
@@ -69,6 +70,8 @@ def learning_grad_descent(y, tx, initial_w, max_iters, gamma):
             # Condition for convergence
             print("COUCOU") # DEBUG: to see if we can arrive here  --> THIS is never printed --> ISSUE with the condition: never in it, this is surely one reason of why the run is so long!!!!!!!!!!!!!!!!!!!!!!!!! CHECK THIS
             break
+        print("iteration={k}".format(k=n))
+        print("loss (without penalization)={l}".format(l=loss))
     
    
     return ws[-1], losses[-1]
