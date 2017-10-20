@@ -42,7 +42,7 @@ def learning_grad_descent(y, tx, initial_w, max_iters, gamma):
         losses.append(loss)
         if(len(losses) > 1 and abs(losses[-1] - losses[-2]) <= threshold):
             # Condition for convergence
-            print("COUCOU") # DEBUG: to see if we can arrive here 
+            print("COUCOU") # DEBUG: to see if we can arrive here  --> THIS is never printed --> ISSUE with the condition: never in it, this is surely one reason of why the run is so long!!!!!!!!!!!!!!!!!!!!!!!!! CHECK THIS
             break
     
    
