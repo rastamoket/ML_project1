@@ -70,8 +70,8 @@ def learning_grad_descent(y, tx, initial_w, max_iter, gamma):
             # Condition for convergence
             print("COUCOU") # DEBUG: to see if we can arrive here  --> THIS is never printed --> ISSUE with the condition: never in it, this is surely one reason of why the run is so long!!!!!!!!!!!!!!!!!!!!!!!!! CHECK THIS
             break
-        print("iteration={k}".format(k=n))
-        print("loss (without penalization)={l}".format(l=loss))
+        #print("iteration={k}".format(k=n))
+        #print("loss (without penalization)={l}".format(l=loss))
     
    
     return ws[-1], losses[-1]
@@ -93,6 +93,7 @@ def learning_by_newton_method(y, tx, initial_w, max_iter, lambda_):
         # get loss and update w.
         loss, gradient, hessian=logistic_regression(y, tx, w)
         w=ws[iter]-np.linalg.inv(hessian).dot(gradient)
+        print(w)
         # log info
         if iter % 1 == 0:
             print("Current iteration={i}, the loss={l}".format(i=iter, l=loss))
