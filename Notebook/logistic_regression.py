@@ -18,7 +18,8 @@ def compute_loss(y, tx, w):
     #loss_ = y.T.dot(np.log(pred)) + (1 - y).T.dot(np.log(1 - pred))
     #loss_ = -loss_
     # Ivan's version
-    loss_ = np.sum(np.log(1+np.exp(tx.dot(w))))-y.T.dot(tx.dot(w))
+    loss_ = (1.0/len(y))*np.sum(np.log(1+np.exp(tx.dot(w))))-y.T.dot(tx.dot(w))
+    print((np.log(1+np.exp(tx.dot(w)))).shape,loss_)
     return loss_
     
     #return np.log(1+np.exp(tx.dot(w))) - (y.T).dot(tx.dot(w))
@@ -63,15 +64,15 @@ def learning_grad_descent(y, tx, initial_w, max_iter, gamma):
     for n in range(max_iter):
         loss = compute_loss(y,tx,w)
         w = ws[n] - compute_gradient(y, tx, w)*gamma
-        
+        print(compute_gradient(y, tx, w).shape)
         ws.append(w)
         losses.append(loss)
         if(len(losses) > 1 and abs(losses[-1] - losses[-2]) <= threshold):
             # Condition for convergence
             print("COUCOU") # DEBUG: to see if we can arrive here  --> THIS is never printed --> ISSUE with the condition: never in it, this is surely one reason of why the run is so long!!!!!!!!!!!!!!!!!!!!!!!!! CHECK THIS
             break
-        #print("iteration={k}".format(k=n))
-        #print("loss (without penalization)={l}".format(l=loss))
+        print("iteration={k}".format(k=n))
+        print("loss (without penalization)={l}".format(l=loss))
     
    
     return ws[-1], losses[-1]
@@ -111,7 +112,7 @@ def learning_by_penalized_gradient(y, tx, initial_w, max_iter, gamma, lambda_):
     """
     
     # init parameters
-    threshold = 1e-8
+    threshold = 1e-2
     ws = [initial_w]
     losses =[]
     w = initial_w
@@ -120,7 +121,7 @@ def learning_by_penalized_gradient(y, tx, initial_w, max_iter, gamma, lambda_):
     for iter in range(max_iter):
         # get loss and update w.
         loss, gradient, hessian = penalized_logistic_regression(y, tx, w, lambda_)
-        w=ws[iter]-np.linalg.inv(hessian).dot(gradient)
+        w=ws[iter]-gamma*np.linalg.inv(hessian).dot(gradient)
         # log info
         if iter % 1 == 0:
             print("Current iteration={i}, loss={l}".format(i=iter, l=loss))
@@ -129,6 +130,6 @@ def learning_by_penalized_gradient(y, tx, initial_w, max_iter, gamma, lambda_):
         ws.append(w)
         if len(losses) > 1 and np.abs(losses[-1] - losses[-2]) < threshold:
             break
-    return ws[-1], losses[-1]
+    return ws[-1],ws[-2], losses[-1]
 
     
