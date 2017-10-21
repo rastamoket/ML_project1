@@ -59,8 +59,11 @@ def cross_validation(y, x, k_indices, k, gamma, lambda_):
     max_iters = 1000 # Put it higher BUT add some condition for convergence (threshold)
     
     #w, loss = learning_grad_descent(y_train, x_train, w_init, max_iters, gamma) --> PREVIOUS
-    w, loss = learning_by_penalized_gradient(y_train, x_train, w_init, max_iters, gamma, lambda_)
-
+    #w, loss = learning_by_penalized_gradient(y_train, x_train, w_init, max_iters, gamma, lambda_)
+    
+    batch_size=7000
+    w,loss=penalized_stochastic_gradient_descent(y_train, x_train, w_init, batch_size, max_iters, gamma, lambda_)
+    
     z = x_train.dot(w)
     sigma = sigmoid(z)
 
