@@ -24,7 +24,7 @@ def load_data(dataSetCSVfile):
         # Here we will load the data if the file given is not "train.csv" --> so it is for "test.csv"
         # "data" will contain all the features for each samples so it will be a NxM matrix (with N = sumber of sample, M = number of features)
         data = np.genfromtxt(
-            path_dataset, delimiter=",", skip_header=1, usecols=(np.arange(1,31)))
+            path_dataset, delimiter=",", skip_header=1, usecols=(np.arange(2,32)))
         return id_samples, data
     
 

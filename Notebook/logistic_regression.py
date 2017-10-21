@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """logistic regression."""
 import numpy as np
+from helpers import *
 
 # Steps of the algo 
 """ 
@@ -18,8 +19,7 @@ def compute_loss(y, tx, w):
     #loss_ = y.T.dot(np.log(pred)) + (1 - y).T.dot(np.log(1 - pred))
     #loss_ = -loss_
     # Ivan's version
-    loss_ = (1.0/len(y))*np.sum(np.log(1+np.exp(tx.dot(w))))-y.T.dot(tx.dot(w))
-    print((np.log(1+np.exp(tx.dot(w)))).shape,loss_)
+    loss_ = np.sum(np.log(1+np.exp(tx.dot(w))))-y.T.dot(tx.dot(w))
     return loss_
     
     #return np.log(1+np.exp(tx.dot(w))) - (y.T).dot(tx.dot(w))
@@ -105,6 +105,22 @@ def learning_by_newton_method(y, tx, initial_w, max_iter, lambda_):
             break
     return ws[-1], losses[-1]
 
+def penalized_stochastic_gradient_descent(y, tx, initial_w, batch_size, max_iter, gamma, lambda_):
+    """Stochastic gradient descent algorithm."""
+    ws = [initial_w]
+    losses = []
+    w = initial_w
+    for n_iter in range(max_iter):
+        batches = batch_iter(y,tx,batch_size)
+        for batchy,batchtx in batches:
+            loss, gradient, hessian = penalized_logistic_regression(batchy,batchtx,w,lambda_)
+            w=ws[n_iter]-gamma*np.linalg.inv(hessian).dot(gradient)
+            # store w and loss
+            ws.append(w)
+            losses.append(loss)
+            print("Gradient Descent({bi}/{ti}): loss={l}".format(bi=n_iter, ti=max_iter - 1, l=loss))
+    return ws[-1], losses[-1]
+
 def learning_by_penalized_gradient(y, tx, initial_w, max_iter, gamma, lambda_):
     """
     Do one step of gradient descent, using the penalized logistic regression.
@@ -118,18 +134,17 @@ def learning_by_penalized_gradient(y, tx, initial_w, max_iter, gamma, lambda_):
     w = initial_w
 
     # start the logistic regression
-    for iter in range(max_iter):
+    for n_iter in range(max_iter):
         # get loss and update w.
         loss, gradient, hessian = penalized_logistic_regression(y, tx, w, lambda_)
-        w=ws[iter]-gamma*np.linalg.inv(hessian).dot(gradient)
+        w=ws[n_iter]-np.exp(-n_iter/gamma)*np.linalg.inv(hessian).dot(gradient)
         # log info
-        if iter % 1 == 0:
+        if n_iter % 1 == 0:
             print("Current iteration={i}, loss={l}".format(i=iter, l=loss))
         # converge criterion
         losses.append(loss)
         ws.append(w)
         if len(losses) > 1 and np.abs(losses[-1] - losses[-2]) < threshold:
             break
-    return ws[-1],ws[-2], losses[-1]
+    return ws[-1], losses[-1]
 
-    

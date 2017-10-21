@@ -21,14 +21,25 @@ def build_k_indices(y, k_fold, seed):
 
 
 
-def cross_validation(y, x, k_indices, k, gamma):
-    """Cross validation
-    List of the possible hyperparameters:
-    - gamma
-    - max iters? --> I think it is better not to be an hyperparameters but add some conditions to it (like threshold for convergence) 
+def cross_validation(y, x, k_indices, k, gamma, lambda_):
+    """Cross validation:
+    argument:
+        - y: labels
+        - x: data
+        - k_indices: indices of the sets 
+        - k: indice of the testing set
+        - gamma: step 
+        - lambda_: regularize term
+
     """
+    
+    # To be sure that we don't have any -1 in our labels
+    if(np.any(y == -1)):
+        y[np.where(y == -1)[0]] = 0
+    
+    
     # get k'th subgroup in test
-    x_test = x[k_indices[k,:]]
+    x_test = x[k_indices[k,:], :]
     y_test = y[k_indices[k,:]]
     
     # Take all the others sets (except the k'th) for the training
@@ -40,24 +51,22 @@ def cross_validation(y, x, k_indices, k, gamma):
 
     # Calculate the weights --> We might use them for initial weight ???????????????
     #w_init = ridge_regression(y_train, x_train, lambda_)
-    w_init = np.zeros(x_train.shape[1])
-
-    #loss_tr = compute_mse(y_train, x_train, w)
-    #loss_te = compute_mse(y_test, x_test, w)
+    # w_init = np.zeros(x_train.shape[1])
+    w_init = np.zeros((x_train.shape[1], 1))
     
     # Definition of the different useful variables for learning_grad_descent
     
     max_iters = 1000 # Put it higher BUT add some condition for convergence (threshold)
     
-    w, loss = learning_grad_descent(y_train, x_train, w_init, max_iters, gamma) 
+    #w, loss = learning_grad_descent(y_train, x_train, w_init, max_iters, gamma) --> PREVIOUS
+    w, loss = learning_by_penalized_gradient(y_train, x_train, w_init, max_iters, gamma, lambda_)
 
     z = x_train.dot(w)
     sigma = sigmoid(z)
 
     ind_back = np.where(sigma<0.5)[0]
     ind_sign = np.where(sigma>0.5)[0]
-    
-        
+   
     y_pred = predict_labels(w, x_test)
     
     train_error = np.where(y_pred != y_test)[0].shape[0]/y_test.shape[0] # This will give the error!!!
