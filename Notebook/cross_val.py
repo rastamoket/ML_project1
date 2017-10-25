@@ -56,25 +56,38 @@ def cross_validation(y, x, k_indices, k, gamma, lambda_):
     
     # Definition of the different useful variables for learning_grad_descent
     
-    max_iters = 1000 # Put it higher BUT add some condition for convergence (threshold)
+    #max_iters = 1000 # Put it higher BUT add some condition for convergence (threshold)
     
-    #w, loss = learning_grad_descent(y_train, x_train, w_init, max_iters, gamma) --> PREVIOUS
-    #w, loss = learning_by_penalized_gradient(y_train, x_train, w_init, max_iters, gamma, lambda_)
+        #w, loss = learning_grad_descent(y_train, x_train, w_init, max_iters, gamma) --> PREVIOUS
+        #w, loss = learning_by_penalized_gradient(y_train, x_train, w_init, max_iters, gamma, lambda_)
     
-    batch_size=7000
+    #batch_size=7000
+    #w,loss=penalized_stochastic_gradient_descent(y_train, x_train, w_init, batch_size, max_iters, gamma, lambda_)
+    
+    #z = x_train.dot(w)
+    #sigma = sigmoid(z)
+
+    #ind_back = np.where(sigma<0.5)[0]
+    #ind_sign = np.where(sigma>0.5)[0]
+   
+    #y_pred = predict_labels(w, x_test)
+    
+    #train_error = np.where(y_pred != y_test)[0].shape[0]/y_test.shape[0] # This will give the error!!!
+    
+    #return train_error
+    #NEW VERSION from now***********************************************************
+    batch_size=15000
+    max_iters = round(y_train.shape[0]/batch_size) # Put it higher BUT add some condition for convergence (threshold)
     w,loss=penalized_stochastic_gradient_descent(y_train, x_train, w_init, batch_size, max_iters, gamma, lambda_)
     
-    z = x_train.dot(w)
-    sigma = sigmoid(z)
-
-    ind_back = np.where(sigma<0.5)[0]
-    ind_sign = np.where(sigma>0.5)[0]
    
-    y_pred = predict_labels(w, x_test)
+    y_pred = np.array(predict_labels(w, x_test))
+    y_test = np.reshape(y_test,(len(y_test),1))
     
-    train_error = np.where(y_pred != y_test)[0].shape[0]/y_test.shape[0] # This will give the error!!!
-    
-    return train_error
+    validation_error = np.where(y_pred != y_test)[0].shape[0]/y_test.shape[0] # This will give the error!!!
+
+    print(validation_error)
+    return validation_error
 
 def cross_validation_visualization(lambds, mse_tr, mse_te):
     """visualization the curves of mse_tr and mse_te."""
