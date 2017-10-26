@@ -50,3 +50,52 @@ def remove_features(data):
     data_features_removed = np.delete(data, features_to_remove, axis=1)
     
     return data_features_removed
+
+''' 
+Adding combination of features as new features at the power of choice. Ex (x1x2)^coef, (x1x3)^coef. 
+x1^pow is not calculated here.
+'''
+def twoFeatureCombinationPower(data, coef, featNum):
+    
+    for i in range(featNum):
+        for j in list(range(i + 1)):
+            if i!=j:
+                newFeature = np.multiply(data[:,i],data[:,j])
+                for k in range(coef):
+                    newFeaturePow = np.power(newFeature,k+1)
+                    data = np.c_[data,newFeaturePow]
+    return data
+
+''' 
+Adding combination of features as new features. Ex x1^2 is calculated here
+'''
+def FeaturePower(data, coef,featNum):
+    if coef <= 1:
+        print('No need to use this function you will duplicate features')
+    else:    
+        powers = np.linspace(2,coef,coef-1)    
+        for i in range(featNum):        
+            newFeature = data[:,i]
+            for j in powers:
+                newFeaturePow = np.power(newFeature,j)
+                data = np.c_[data,newFeaturePow]
+                
+    return data
+
+def split_data(x, y, ratio, seed=1):
+    """split the dataset based on the split ratio."""
+    # set seed
+    np.random.seed(seed)
+    # generate random indices
+    num_row = len(y)
+    indices = np.random.permutation(num_row)
+    index_split = int(np.floor(ratio * num_row))
+    index_tr = indices[: index_split]
+    index_te = indices[index_split:]
+    # create split
+    x_tr = x[index_tr]
+    x_te = x[index_te]
+    y_tr = y[index_tr]
+    y_te = y[index_te]
+    
+    return x_tr, x_te, y_tr, y_te

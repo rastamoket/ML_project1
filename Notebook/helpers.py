@@ -39,13 +39,12 @@ def standardize(x):
     return x, mean_x, std_x
 
 
-def build_model_data(data, label):
+def build_model_data(data):
     """Form (y,tX) to get regression data in matrix form."""
-    y = label
     x = data
-    num_samples = len(y)
+    num_samples = data.shape[0]
     tx = np.c_[np.ones(num_samples), x]
-    return y, tx
+    return tx
 
 
 def batch_iter(y, tx, batch_size, num_batches=1, shuffle=True):

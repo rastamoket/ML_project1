@@ -49,58 +49,49 @@ def cross_validation(y, x, k_indices, k, gamma, lambda_):
     y_train = y
     y_train = np.delete(y_train, (k_indices[k,:]), axis=0)
 
-    # Calculate the weights --> We might use them for initial weight ???????????????
-    #w_init = ridge_regression(y_train, x_train, lambda_)
-    # w_init = np.zeros(x_train.shape[1])
+    # Initiate the w
     w_init = np.zeros((x_train.shape[1], 1))
     
     # Definition of the different useful variables for learning_grad_descent
     
-    #max_iters = 1000 # Put it higher BUT add some condition for convergence (threshold)
+    max_iters = 1000 # Put it higher BUT add some condition for convergence (threshold)
     
-<<<<<<< HEAD
+
     #w, loss = learning_grad_descent(y_train, x_train, w_init, max_iters, gamma) --> PREVIOUS
     w, loss = learning_by_penalized_gradient(y_train, x_train, w_init, max_iters, gamma, lambda_)
     
     #batch_size=15000
     #max_iters = round(y_train.shape[0]/batch_size) # Put it higher BUT add some condition for convergence (threshold)
-=======
+
         #w, loss = learning_grad_descent(y_train, x_train, w_init, max_iters, gamma) --> PREVIOUS
         #w, loss = learning_by_penalized_gradient(y_train, x_train, w_init, max_iters, gamma, lambda_)
     
     #batch_size=7000
->>>>>>> 68fb7b0c266698d7a4322c7f62004c2827856353
+
     #w,loss=penalized_stochastic_gradient_descent(y_train, x_train, w_init, batch_size, max_iters, gamma, lambda_)
     
-    #z = x_train.dot(w)
-    #sigma = sigmoid(z)
-
-    #ind_back = np.where(sigma<0.5)[0]
-    #ind_sign = np.where(sigma>0.5)[0]
    
-<<<<<<< HEAD
-    y_pred = np.array(predict_labels(w, x_test))
+    #y_pred = np.array(predict_labels(w, x_test))
+    y_pred = predict_labels(w, x_test)
     y_test = np.reshape(y_test,(len(y_test),1))
-    print(y_test.shape, y_pred.shape)
+
     
-    validation_error = np.where(y_pred == y_test)[0].shape[0]/y_test.shape[0] # This will give the error!!!
-=======
+    validation_error = np.where(y_pred != y_test)[0].shape[0]/y_test.shape[0] # This will give the error!!!
+
     #y_pred = predict_labels(w, x_test)
     
     #train_error = np.where(y_pred != y_test)[0].shape[0]/y_test.shape[0] # This will give the error!!!
     
     #return train_error
     #NEW VERSION from now***********************************************************
-    batch_size=15000
-    max_iters = round(y_train.shape[0]/batch_size) # Put it higher BUT add some condition for convergence (threshold)
-    w,loss=penalized_stochastic_gradient_descent(y_train, x_train, w_init, batch_size, max_iters, gamma, lambda_)
+#    batch_size=15000
+#    max_iters = round(y_train.shape[0]/batch_size) # Put it higher BUT add some condition for convergence (threshold)
+#    w,loss=penalized_stochastic_gradient_descent(y_train, x_train, w_init, batch_size, max_iters, gamma, lambda_)
     
-   
-    y_pred = np.array(predict_labels(w, x_test))
-    y_test = np.reshape(y_test,(len(y_test),1))
+#    y_pred = np.array(predict_labels(w, x_test))
+#    y_test = np.reshape(y_test,(len(y_test),1))
     
-    validation_error = np.where(y_pred != y_test)[0].shape[0]/y_test.shape[0] # This will give the error!!!
->>>>>>> 68fb7b0c266698d7a4322c7f62004c2827856353
+#    validation_error = np.where(y_pred != y_test)[0].shape[0]/y_test.shape[0] # This will give the error!!!
 
     print(validation_error)
     return validation_error
