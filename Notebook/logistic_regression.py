@@ -128,7 +128,7 @@ def learning_by_penalized_gradient(y, tx, initial_w, max_iter, gamma, lambda_):
     """
     
     # init parameters
-    threshold = 1e-2
+    threshold = 1e-5
     ws = [initial_w]
     losses =[]
     w = initial_w
