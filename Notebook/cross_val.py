@@ -54,7 +54,7 @@ def cross_validation(y, x, k_indices, k, gamma, lambda_):
     
     # Definition of the different useful variables for learning_grad_descent
     
-    max_iters = 1000 # Put it higher BUT add some condition for convergence (threshold)
+    max_iters = 100 # Put it higher BUT add some condition for convergence (threshold)
     
 
     #w, loss = learning_grad_descent(y_train, x_train, w_init, max_iters, gamma) --> PREVIOUS

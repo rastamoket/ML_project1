@@ -34,10 +34,14 @@ def compute_gradient(y, tx, w):
 
 def calculate_hessian(y, tx, w):
     """return the hessian of the loss function."""
-    # Ivan's version
+    # Ivan's version --> old
+    #dia=sigmoid(tx.dot(w))*(1-sigmoid(tx.dot(w)))
+    #S=np.diag(dia.T[0])
+    #return tx.T.dot(S.dot(tx))
+    # NEW --> amazing
+    txT=tx.T
     dia=sigmoid(tx.dot(w))*(1-sigmoid(tx.dot(w)))
-    S=np.diag(dia.T[0])
-    return tx.T.dot(S.dot(tx))
+    return txT.dot((txT*dia.T[0]).T)
 
 def logistic_regression(y, tx, w):
     """return the loss, gradient, and hessian."""
@@ -128,7 +132,7 @@ def learning_by_penalized_gradient(y, tx, initial_w, max_iter, gamma, lambda_):
     """
     
     # init parameters
-    threshold = 1e-5
+    threshold = 1e-9
     ws = [initial_w]
     losses =[]
     w = initial_w

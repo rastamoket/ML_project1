@@ -69,18 +69,27 @@ def twoFeatureCombinationPower(data, coef, featNum):
 ''' 
 Adding combination of features as new features. Ex x1^2 is calculated here
 '''
-def FeaturePower(data, coef,featNum):
+def FeaturePower(data, coef, data_to_expand): # featNum):
+    # NEW version, faster
     if coef <= 1:
         print('No need to use this function you will duplicate features')
-    else:    
-        powers = np.linspace(2,coef,coef-1)    
-        for i in range(featNum):        
-            newFeature = data[:,i]
-            for j in powers:
-                newFeaturePow = np.power(newFeature,j)
-                data = np.c_[data,newFeaturePow]
+    else:
+        power_to = np.arange(2,coef+1)
+        for p in power_to:
+            data_to_expand = np.c_[data_to_expand,np.power(data, p)]
+    return data_to_expand
+
+#    if coef <= 1:
+#        print('No need to use this function you will duplicate features')
+#    else:    
+#        powers = np.linspace(2,coef,coef-1)    
+#        for i in range(featNum):        
+#            newFeature = data[:,i]
+#            for j in powers:
+#                newFeaturePow = np.power(newFeature,j)
+#                data = np.c_[data,newFeaturePow]
                 
-    return data
+#    return data
 
 def split_data(x, y, ratio, seed=1):
     """split the dataset based on the split ratio."""
